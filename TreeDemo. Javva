@@ -1,0 +1,299 @@
+import java.util.*;
+class Bst{
+
+	Node root;
+	class Node{
+		Node left;
+		Node right;
+		int data;
+
+		Node(int data){
+			this.data=data;
+			this.left=null;
+			this.right=null;
+
+		}
+	}
+
+	void insert(int d){
+		Node newnode=new Node(d);
+		if(root==null){
+			root=newnode;
+		}
+		else
+		{
+			Node temp=root;
+
+			while(root.left!=null||root.right!=null){
+				if(newnode.data>=temp.data&&temp.right!=null)
+				{
+					temp=temp.right;
+				}
+				else if(newnode.data<temp.data&&temp.left!=null)
+				{
+					temp=temp.left;
+				}
+				else
+				{
+					break;
+				}
+			}
+			if(newnode.data>=temp.data){
+
+				temp.right=newnode;
+			}
+			else{
+
+				temp.left=newnode;
+			}
+
+		}
+	}
+	void display_inorder()
+	{	
+		if(root==null)
+		{
+			System.out.println("TREE EMPTY");
+		}
+		else
+		{
+			System.out.println("INORDER OF GIVEN TREE");
+			Stack<Node> stk=new Stack<Node>();
+
+			Node temp=root;
+
+
+			while(temp!=null||stk.size()>0)
+			{
+				while(temp!=null)
+				{
+					stk.push(temp);					
+					temp=temp.left;
+
+				} 
+				temp=stk.pop();
+				System.out.println(temp.data);
+				temp=temp.right;
+				
+			}
+		}
+	}
+	void display_preorder()
+	{
+		if(root==null)
+		{
+			System.out.println("TREE EMPTY");
+		}
+		else{
+			System.out.println("PREORDER OF GIVEN TREE");
+			Stack<Node> stk=new Stack<Node>();
+
+			stk.push(root);
+			while(stk.size()>0)
+			{
+				Node temp = stk.pop();
+				System.out.println(temp.data);
+				if(temp.right!= null)
+				{
+					stk.push(temp.right);
+				}
+				if(temp.left!= null)
+				{
+					stk.push(temp.left);
+				}
+			}
+		}
+	}
+	void display_postorder()
+	{
+		if(root==null)
+		{
+			System.out.println("TREE EMPTY");
+		}
+		else{
+			System.out.println("PREORDER OF GIVEN TREE");
+			Stack<Node> stk1=new Stack<Node>();
+			Stack<Node> stk2=new Stack<Node>();
+			stk1.push(root);
+			while(stk1.size()>0)
+			{
+				Node temp = stk1.pop();
+				stk2.push(temp);
+
+				if(temp.left!= null)
+				{
+					stk1.push(temp.left);
+				}
+				if(temp.right!= null)
+				{
+					stk1.push(temp.right);
+				}
+			}
+			while (stk2.size()>0) {
+				Node temp = stk2.pop();
+				System.out.println(temp.data);
+			}
+		}
+
+
+	}
+
+	public void deleteLeaf(int a) {
+		Node parent = null;
+		Node temp = root;
+		while (temp != null && temp.data != a) {
+			parent = temp;
+			if (a > temp.data) {
+				temp = temp.right;
+			}
+			else {
+				temp = temp.left;
+			}
+		}
+		if (temp.left == null && temp.right == null) {
+			if (parent.data > temp.data) {
+				parent.left = null;
+			} 
+			else {
+				parent.right = null;
+			}
+		}
+	}
+
+	public void delete_one_child(int a) {
+		Node parent = null;
+		Node temp = root;
+		while (temp != null && temp.data != a) {
+			parent = temp;
+			if (a > temp.data) {
+				temp = temp.right;
+			}
+			else {
+				temp = temp.left;
+			}
+		}
+
+		if (temp.left != null && temp.right == null) {
+			if (temp.data > parent.data) {
+				parent.right = temp.left;
+			} 
+			else {
+				parent.left = temp.left;
+			}
+		}
+
+		if (temp.left == null && temp.right != null) {
+			if (temp.data > parent.data) {
+				parent.right = temp.right;
+			} 
+			else {
+				parent.left = temp.right;
+			}
+		}
+	}
+	public void delete_two_child(int a)
+	{
+		Node parent = null;
+		Node temp = root;
+		while (temp != null && temp.data != a) {
+			parent = temp;
+			if (a > temp.data) {
+				temp = temp.right;
+			}
+			else {
+				temp = temp.left;
+			}
+		}
+
+	if(temp.left != null && temp.right != null){
+			Node t = inorderSuccessor(temp);
+			temp.data = t.data;
+		}
+	}
+
+	public Node inorderSuccessor(Node N){
+		boolean rightchild = true;
+		Node parent = N;
+		N = N.right;
+
+		if(N.left != null){
+			rightchild = false;
+		}
+
+		while(N.left != null){
+			parent = N;
+			N = N.left;
+		}
+
+		if(rightchild){
+			parent.right = N.right;
+		}
+
+		else{
+			parent.left = N.right;
+		}
+
+		return N;	
+	}
+}
+
+
+class Tree_Demo
+{
+
+	public static void main(String[] args) 
+	{
+
+		Bst obj=new Bst();
+		
+		Scanner sc = new Scanner(System.in);
+		while(true)
+		{
+			System.out.println("1.INSERT INTO TREE ");
+			System.out.println("2.DISPAY IN INORDER");
+			System.out.println("3.DISPAY IN PREORDER");
+			System.out.println("4.DISPAY IN POSTORDER");
+			System.out.println("5.DELETE LEAF NODE");
+			System.out.println("6.DELETE NODE WITH ONE CHILD");
+			System.out.println("7.DELETE NODE WITH TWO CHILD");
+			System.out.println("8.QUIT");
+			
+			System.out.println("ENTER CHOICE:");
+			int choice = sc.nextInt();
+			switch(choice)
+			{
+				case 1:
+				System.out.println("Enter a number");
+				obj.insert(sc.nextInt());
+				break;
+				case 2:
+
+				obj.display_inorder();
+				break;
+				case 3:
+
+				obj.display_preorder();
+				break;
+				case 4:
+
+				obj.display_postorder();
+				break;
+				case 5:
+				System.out.println("Enter a number to be deleted:");
+				obj.deleteLeaf(sc.nextInt());
+				break;
+				case 6:
+				System.out.println("Enter a number to be deleted:");
+				obj.delete_one_child(sc.nextInt());
+				break;
+				case 7:
+				System.out.println("Enter a number to be deleted:");
+				obj.delete_two_child(sc.nextInt());
+				break;
+				case 8:
+				System.out.println("THANK YOU");
+				System.exit(0);	    	
+			}	 
+		}
+	}
+}
